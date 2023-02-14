@@ -1,0 +1,121 @@
+{
+  "name": "Provider",
+  "fields": [
+    {
+      "fieldName": "firstName",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "lastName",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "dateOfBirth",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "street",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "city",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "country",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "socialReason",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "phoneNumber",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "email",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "created",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "createdBy",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "updated",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "updatedBy",
+      "fieldType": "Long"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "provider",
+      "relationshipName": "user",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "quote",
+      "otherEntityRelationshipName": "provider",
+      "relationshipName": "quote"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "attachment",
+      "otherEntityRelationshipName": "provider",
+      "relationshipName": "attachment"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "experience",
+      "otherEntityRelationshipName": "provider",
+      "relationshipName": "experience"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "skillAndHobby",
+      "otherEntityRelationshipName": "provider",
+      "relationshipName": "skillAndHobby"
+    },
+    {
+      "relationshipType": "many-to-many",
+      "otherEntityName": "language",
+      "otherEntityRelationshipName": "provider",
+      "relationshipName": "language",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "many-to-many",
+      "otherEntityName": "job",
+      "otherEntityRelationshipName": "provider",
+      "relationshipName": "job",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "many-to-many",
+      "otherEntityName": "driverLicence",
+      "otherEntityRelationshipName": "provider",
+      "relationshipName": "driverLicence",
+      "ownerSide": true
+    }
+  ],
+  "entityTableName": "provider",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20230214221137"
+}

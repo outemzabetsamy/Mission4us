@@ -1,0 +1,11 @@
+id;filename;type;is_validated;is_updated_in_s_3;data;data_content_type;extension;file_size;created;created_by;updated;updated_by
+1;Savings;DRIVING_LICENSE;true;true;../fake-data/blob/hipster.png;image/png;Computer Alabama;91161;2023-02-14T10:32:08;78608;2023-02-14T10:47:23;80133
+2;Team-oriented;PROFILE_PICTURE;false;true;../fake-data/blob/hipster.png;image/png;maximize primary Pre-emptive;1122;2023-02-14T12:59:28;19216;2023-02-14T01:00:44;2465
+3;Senior Arab;PROFILE_PICTURE;true;true;../fake-data/blob/hipster.png;image/png;Gloves Soft Land;37697;2023-02-14T11:18:32;44201;2023-02-14T06:17:38;17287
+4;withdrawal;PROFILE_PICTURE;false;true;../fake-data/blob/hipster.png;image/png;withdrawal invoice;36299;2023-02-14T00:34:44;1747;2023-02-14T01:37:30;16805
+5;Cotton card grey;DIPLOMA;false;true;../fake-data/blob/hipster.png;image/png;AI Granite;33838;2023-02-14T08:09:58;47029;2023-02-14T21:30:47;15099
+6;South Account;DIPLOMA;true;true;../fake-data/blob/hipster.png;image/png;Engineer Berkshire Pennsylvania;30897;2023-02-14T00:07:22;85451;2023-02-14T14:56:07;27898
+7;Chips Account input;DIPLOMA;true;false;../fake-data/blob/hipster.png;image/png;partnerships Rustic Right-sized;516;2023-02-14T06:11:19;66641;2023-02-14T21:15:39;17942
+8;Salad Brooks Island;EXPERIENCE_CERTIFICATION;true;true;../fake-data/blob/hipster.png;image/png;Garden Applications Investment;19845;2023-02-14T14:55:48;10739;2023-02-14T18:01:32;80520
+9;haptic Chair;PROFILE_PICTURE;true;false;../fake-data/blob/hipster.png;image/png;Berkshire Internal;45194;2023-02-14T02:19:26;44900;2023-02-14T05:21:16;60255
+10;Health Avon Small;PROFILE_PICTURE;false;true;../fake-data/blob/hipster.png;image/png;Table;86114;2023-02-14T04:29:03;59010;2023-02-14T20:00:17;1938

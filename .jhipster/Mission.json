@@ -1,0 +1,61 @@
+{
+  "name": "Mission",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "type",
+      "fieldType": "MissionType",
+      "fieldValues": "DRIVING"
+    },
+    {
+      "fieldName": "created",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "createdBy",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "updated",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "updatedBy",
+      "fieldType": "Long"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "quote",
+      "otherEntityRelationshipName": "mission",
+      "relationshipName": "quote"
+    },
+    {
+      "relationshipType": "many-to-many",
+      "otherEntityName": "language",
+      "otherEntityRelationshipName": "mission",
+      "relationshipName": "language",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "client",
+      "otherEntityRelationshipName": "mission",
+      "relationshipName": "client"
+    }
+  ],
+  "entityTableName": "mission",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20230214221136"
+}

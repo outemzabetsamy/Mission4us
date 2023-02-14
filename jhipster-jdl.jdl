@@ -1,0 +1,135 @@
+entity Client {
+firstName String
+lastName String
+street String
+city String
+country String
+socialReason String
+phoneNumber String
+email String
+created ZonedDateTime
+createdBy Long
+updated ZonedDateTime
+updatedBy Long
+}
+entity Mission {
+name String
+type MissionType
+created ZonedDateTime
+createdBy Long
+updated ZonedDateTime
+updatedBy Long
+}
+entity Provider {
+firstName String
+lastName String
+dateOfBirth LocalDate
+street String
+city String
+country String
+socialReason String
+phoneNumber String
+email String
+created ZonedDateTime
+createdBy Long
+updated ZonedDateTime
+updatedBy Long
+}
+entity Quote {
+amount BigDecimal
+status QuoteStatus
+created ZonedDateTime
+createdBy Long
+updated ZonedDateTime
+updatedBy Long
+}
+entity Attachment {
+filename String maxlength(255)
+type AttachmentType
+isValidated Boolean
+isUpdatedInS3 Boolean
+data Blob
+extension String
+fileSize Long
+created ZonedDateTime
+createdBy Long
+updated ZonedDateTime
+updatedBy Long
+}
+
+entity DriverLicence {
+name String
+}
+entity Experience {
+name String
+type ExperienceType
+startDate LocalDate
+endDate LocalDate
+location String
+establishment String
+description String
+created ZonedDateTime
+createdBy Long
+updated ZonedDateTime
+updatedBy Long
+}
+
+entity SkillAndHobby {
+name String
+type OccupationAndSkillType
+description String
+rating Long
+}
+entity Language {
+code String
+name String
+}
+entity Job {
+name String
+}
+enum QuoteStatus {
+SELECTED, REFUSED
+}
+enum ExperienceType {
+TRAINING,
+PROFESSIONNAL_EXPERIENCE
+}
+enum AttachmentType {
+DRIVING_LICENSE,
+EXPERIENCE_CERTIFICATION,
+DIPLOMA,
+PROFILE_PICTURE
+}
+enum OccupationAndSkillType {
+SKILL,
+HOBBY,
+SPOKEN_LANGUAGE
+}
+enum MissionType {
+DRIVING
+}
+
+relationship OneToOne {
+Provider{user} to User
+Client{user} to User
+}
+
+relationship OneToMany {
+Client to Mission
+Provider to Quote
+Mission to Quote
+Client to Attachment
+Provider to Attachment
+Provider to Experience
+Provider to SkillAndHobby
+}
+relationship ManyToMany {
+Provider to Language
+Provider to Job
+Mission to Language
+Provider to DriverLicence
+}
+dto * with mapstruct
+service * with serviceClass
+paginate * with pagination
+

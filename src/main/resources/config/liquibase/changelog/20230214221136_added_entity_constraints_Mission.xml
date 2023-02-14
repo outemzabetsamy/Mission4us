@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+    <!--
+        Added the constraints for entity Mission.
+    -->
+    <changeSet id="20230214221136-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="mission_id"
+                                 baseTableName="rel_mission__language"
+                                 constraintName="fk_rel_mission__language__mission_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="mission"/>
+
+        <addForeignKeyConstraint baseColumnNames="language_id"
+                                 baseTableName="rel_mission__language"
+                                 constraintName="fk_rel_mission__language__language_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="language"/>
+
+        <addForeignKeyConstraint baseColumnNames="client_id"
+                                 baseTableName="mission"
+                                 constraintName="fk_mission__client_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="client"/>
+    </changeSet>
+</databaseChangeLog>

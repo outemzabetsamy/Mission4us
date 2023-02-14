@@ -1,0 +1,40 @@
+{
+  "name": "SkillAndHobby",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "type",
+      "fieldType": "OccupationAndSkillType",
+      "fieldValues": "SKILL,HOBBY,SPOKEN_LANGUAGE"
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "rating",
+      "fieldType": "Long"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "provider",
+      "otherEntityRelationshipName": "skillAndHobby",
+      "relationshipName": "provider"
+    }
+  ],
+  "entityTableName": "skill_and_hobby",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20230214221142"
+}
