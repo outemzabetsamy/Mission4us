@@ -130,11 +130,11 @@ spring:
       client:
         provider:
           oidc:
-            issuer-uri: http://localhost:9080/auth/realms/jhipster
+            issuer-uri: https://auth.mission4us.com/auth/realms/Mission4US
         registration:
           oidc:
-            client-id: web_app
-            client-secret: web_app
+            client-id: mission
+            client-secret:
             scope: openid,profile,email
 
 server:
