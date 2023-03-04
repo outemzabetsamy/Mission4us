@@ -5,12 +5,23 @@ import com.sundev.mission4us.domain.Authority;
 import com.sundev.mission4us.domain.User;
 import com.sundev.mission4us.repository.AuthorityRepository;
 import com.sundev.mission4us.repository.UserRepository;
+import com.sundev.mission4us.security.AuthoritiesConstants;
 import com.sundev.mission4us.security.SecurityUtils;
 import com.sundev.mission4us.service.dto.AdminUserDTO;
 import com.sundev.mission4us.service.dto.UserDTO;
+
+import java.net.URI;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import com.sundev.mission4us.service.mapper.UserMapper;
+import com.sundev.mission4us.web.rest.errors.BadRequestAlertException;
+import com.sundev.mission4us.web.rest.errors.ErrorConstants;
+import com.sundev.mission4us.web.rest.vm.ManagedUserVM;
+import org.keycloak.admin.client.Keycloak;
+import org.keycloak.representations.idm.CredentialRepresentation;
+import org.keycloak.representations.idm.UserRepresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
@@ -22,6 +33,8 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.ws.rs.core.Response;
 
 /**
  * Service class for managing users.
@@ -38,10 +51,17 @@ public class UserService {
 
     private final CacheManager cacheManager;
 
-    public UserService(UserRepository userRepository, AuthorityRepository authorityRepository, CacheManager cacheManager) {
+    private final Keycloak keycloak;
+
+    private final UserMapper userMapper;
+
+    public UserService(UserRepository userRepository, AuthorityRepository authorityRepository,
+                       CacheManager cacheManager, Keycloak keycloak, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.authorityRepository = authorityRepository;
         this.cacheManager = cacheManager;
+        this.keycloak = keycloak;
+        this.userMapper = userMapper;
     }
 
     /**
@@ -223,6 +243,40 @@ public class UserService {
         }
         user.setActivated(activated);
         return user;
+    }
+    @Transactional
+    public AdminUserDTO createUser(ManagedUserVM managedUserVM) {
+        UserRepresentation user = new UserRepresentation();
+        user.setUsername(managedUserVM.getLogin());
+        user.setFirstName(managedUserVM.getFirstName());
+        user.setLastName(managedUserVM.getLastName());
+        user.setEmail(managedUserVM.getEmail());
+        user.setEmailVerified(Boolean.FALSE);
+        user.setEnabled(true);
+        user.setGroups(List.of("/user"));
+        CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
+        credentialRepresentation.setType(CredentialRepresentation.PASSWORD);
+        credentialRepresentation.setTemporary(Boolean.FALSE);
+        credentialRepresentation.setValue(managedUserVM.getPassword());
+        user.setCredentials(List.of(credentialRepresentation));
+        Response response = keycloak.realm("jhipster").users().create(user);
+        if (response.getStatus() != 201) {
+            throw new BadRequestAlertException(
+                "Failed to create user: "+ response.getStatusInfo().getReasonPhrase(),
+                "User",
+                ErrorConstants.USER_KEYCLOAK_CREATION_FAILED);
+        }
+        URI location = response.getLocation();
+        String id = location.toString().split("/")[location.toString().split("/").length-1];
+        managedUserVM.setId(id);
+        managedUserVM.setAuthorities(Set.of(AuthoritiesConstants.USER));
+        return save(managedUserVM);
+    }
+
+    public AdminUserDTO save(AdminUserDTO adminUserDTO) {
+        log.debug("save user: {}", adminUserDTO);
+        User user = userRepository.save(userMapper.userDTOToUser(adminUserDTO));
+        return userMapper.userToAdminUserDTO(user);
     }
 
     private void clearUserCaches(User user) {

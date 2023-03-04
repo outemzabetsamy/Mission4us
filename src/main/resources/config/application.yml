@@ -130,10 +130,10 @@ spring:
       client:
         provider:
           oidc:
-            issuer-uri: https://auth.mission4us.com/auth/realms/Mission4US
+            issuer-uri: https://auth.mission4us.com/auth/realms/local_tests
         registration:
           oidc:
-            client-id: mission
+            client-id: m4us_tests
             client-secret:
             scope: openid,profile,email
 
