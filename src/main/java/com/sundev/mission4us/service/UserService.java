@@ -3,6 +3,7 @@ package com.sundev.mission4us.service;
 import com.sundev.mission4us.config.Constants;
 import com.sundev.mission4us.domain.Authority;
 import com.sundev.mission4us.domain.User;
+import com.sundev.mission4us.domain.enumeration.UserRole;
 import com.sundev.mission4us.repository.AuthorityRepository;
 import com.sundev.mission4us.repository.UserRepository;
 import com.sundev.mission4us.security.AuthoritiesConstants;
@@ -269,7 +270,12 @@ public class UserService {
         URI location = response.getLocation();
         String id = location.toString().split("/")[location.toString().split("/").length-1];
         managedUserVM.setId(id);
-        managedUserVM.setAuthorities(Set.of(AuthoritiesConstants.USER));
+        if (Objects.equals(UserRole.CLIENT, managedUserVM.getUserRole())){
+            managedUserVM.setAuthorities(Set.of(AuthoritiesConstants.CLIENT));
+        } else if (Objects.equals(UserRole.PROVIDER, managedUserVM.getUserRole())) {
+            managedUserVM.setAuthorities(Set.of(AuthoritiesConstants.PROVIDER));
+        }
+
         return save(managedUserVM);
     }
 

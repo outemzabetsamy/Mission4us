@@ -1,5 +1,6 @@
 package com.sundev.mission4us.web.rest.vm;
 
+import com.sundev.mission4us.domain.enumeration.UserRole;
 import com.sundev.mission4us.service.dto.AdminUserDTO;
 
 import javax.validation.constraints.Size;
@@ -15,6 +16,8 @@ public class ManagedUserVM extends AdminUserDTO {
     @Size(min = PASSWORD_MIN_LENGTH, max = PASSWORD_MAX_LENGTH)
     private String password;
 
+    private UserRole userRole;
+
     public String getPassword() {
         return password;
     }
@@ -23,6 +26,13 @@ public class ManagedUserVM extends AdminUserDTO {
         this.password = password;
     }
 
+    public UserRole getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(UserRole userRole) {
+        this.userRole = userRole;
+    }
 
     public ManagedUserVM() {
         // Empty constructor needed for Jackson.
