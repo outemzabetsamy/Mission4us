@@ -5,11 +5,14 @@ import com.sundev.mission4us.repository.ClientRepository;
 import com.sundev.mission4us.service.dto.ClientDTO;
 import com.sundev.mission4us.service.mapper.ClientMapper;
 import java.util.Optional;
+
+import com.sundev.mission4us.web.rest.vm.ManagedUserVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -41,6 +44,15 @@ public class ClientService {
         Client client = clientMapper.toEntity(clientDTO);
         client = clientRepository.save(client);
         return clientMapper.toDto(client);
+    }
+    //@Transactional(propagation = Propagation.REQUIRES_NEW)
+    public ClientDTO createClient(ManagedUserVM managedUserVM, String id) {
+        ClientDTO clientDTO = new ClientDTO();
+        clientDTO.setEmail(managedUserVM.getEmail());
+        clientDTO.setFirstName(managedUserVM.getFirstName());
+        clientDTO.setLastName(managedUserVM.getLastName());
+        clientDTO.setUserId(id);
+        return save(clientDTO);
     }
 
     /**

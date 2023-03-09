@@ -5,11 +5,14 @@ import com.sundev.mission4us.repository.ProviderRepository;
 import com.sundev.mission4us.service.dto.ProviderDTO;
 import com.sundev.mission4us.service.mapper.ProviderMapper;
 import java.util.Optional;
+
+import com.sundev.mission4us.web.rest.vm.ManagedUserVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -41,6 +44,15 @@ public class ProviderService {
         Provider provider = providerMapper.toEntity(providerDTO);
         provider = providerRepository.save(provider);
         return providerMapper.toDto(provider);
+    }
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void createProvider(ManagedUserVM managedUserVM, String id) {
+        ProviderDTO providerDTO = new ProviderDTO();
+        providerDTO.setEmail(managedUserVM.getEmail());
+        providerDTO.setFirstName(managedUserVM.getFirstName());
+        providerDTO.setLastName(managedUserVM.getLastName());
+        providerDTO.setUserId(id);
+        save(providerDTO);
     }
 
     /**

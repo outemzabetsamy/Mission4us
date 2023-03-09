@@ -10,7 +10,7 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring", uses = { UserMapper.class, LanguageMapper.class, JobMapper.class, DriverLicenceMapper.class })
 public interface ProviderMapper extends EntityMapper<ProviderDTO, Provider> {
-    @Mapping(target = "user", source = "user", qualifiedByName = "id")
+    @Mapping(target = "userId", source = "user.id")
     @Mapping(target = "languages", source = "languages", qualifiedByName = "idSet")
     @Mapping(target = "jobs", source = "jobs", qualifiedByName = "idSet")
     @Mapping(target = "driverLicences", source = "driverLicences", qualifiedByName = "idSet")
@@ -21,6 +21,7 @@ public interface ProviderMapper extends EntityMapper<ProviderDTO, Provider> {
     @Mapping(target = "id", source = "id")
     ProviderDTO toDtoId(Provider provider);
 
+    @Mapping(target = "user", source = "userId")
     @Mapping(target = "removeLanguage", ignore = true)
     @Mapping(target = "removeJob", ignore = true)
     @Mapping(target = "removeDriverLicence", ignore = true)

@@ -4,8 +4,13 @@ import com.sundev.mission4us.config.Constants;
 import com.sundev.mission4us.security.AuthoritiesConstants;
 import com.sundev.mission4us.service.UserService;
 import com.sundev.mission4us.service.dto.AdminUserDTO;
+
+import java.net.URI;
 import java.util.*;
+import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
+
+import com.sundev.mission4us.web.rest.vm.ManagedUserVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -88,4 +93,5 @@ public class UserResource {
         log.debug("REST request to get User : {}", login);
         return ResponseUtil.wrapOrNotFound(userService.getUserWithAuthoritiesByLogin(login).map(AdminUserDTO::new));
     }
+
 }

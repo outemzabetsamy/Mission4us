@@ -65,6 +65,14 @@ server:
 #
 # Full reference is available at: https://www.jhipster.tech/common-application-properties/
 # ===================================================================
+keycloak:
+  auth-server-url: https://auth.mission4us.com/auth
+  realm: local_tests
+  resource: admin_rest_tests
+  credentials:
+    secret: 0QzW8BUrqlCbaOrjH80TwKQA38ApFeNu
+  username: rest_admin
+  password: admin
 
 jhipster:
   cache: # Cache configuration

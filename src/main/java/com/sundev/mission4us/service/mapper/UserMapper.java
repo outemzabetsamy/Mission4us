@@ -86,6 +86,7 @@ public class UserMapper {
         return user;
     }
 
+
     @Named("id")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")

@@ -40,7 +40,7 @@ public class ProviderDTO implements Serializable {
 
     private Long updatedBy;
 
-    private UserDTO user;
+    private String userId;
 
     private Set<LanguageDTO> languages = new HashSet<>();
 
@@ -160,12 +160,12 @@ public class ProviderDTO implements Serializable {
         this.updatedBy = updatedBy;
     }
 
-    public UserDTO getUser() {
-        return user;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUser(UserDTO user) {
-        this.user = user;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public Set<LanguageDTO> getLanguages() {
@@ -231,7 +231,7 @@ public class ProviderDTO implements Serializable {
             ", createdBy=" + getCreatedBy() +
             ", updated='" + getUpdated() + "'" +
             ", updatedBy=" + getUpdatedBy() +
-            ", user=" + getUser() +
+            ", userId=" + getUserId() +
             ", languages=" + getLanguages() +
             ", jobs=" + getJobs() +
             ", driverLicences=" + getDriverLicences() +

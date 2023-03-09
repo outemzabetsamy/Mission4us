@@ -2,6 +2,7 @@ package com.sundev.mission4us.service;
 
 import com.sundev.mission4us.config.Constants;
 import com.sundev.mission4us.domain.Authority;
+import com.sundev.mission4us.domain.Provider;
 import com.sundev.mission4us.domain.User;
 import com.sundev.mission4us.domain.enumeration.UserRole;
 import com.sundev.mission4us.repository.AuthorityRepository;
@@ -9,6 +10,8 @@ import com.sundev.mission4us.repository.UserRepository;
 import com.sundev.mission4us.security.AuthoritiesConstants;
 import com.sundev.mission4us.security.SecurityUtils;
 import com.sundev.mission4us.service.dto.AdminUserDTO;
+import com.sundev.mission4us.service.dto.ClientDTO;
+import com.sundev.mission4us.service.dto.ProviderDTO;
 import com.sundev.mission4us.service.dto.UserDTO;
 
 import java.net.URI;
@@ -33,6 +36,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.ws.rs.core.Response;
@@ -56,13 +60,19 @@ public class UserService {
 
     private final UserMapper userMapper;
 
+    private final ClientService clientService;
+    private final ProviderService providerService;
+
     public UserService(UserRepository userRepository, AuthorityRepository authorityRepository,
-                       CacheManager cacheManager, Keycloak keycloak, UserMapper userMapper) {
+                       CacheManager cacheManager, Keycloak keycloak, UserMapper userMapper,
+                       ClientService clientService, ProviderService providerService) {
         this.userRepository = userRepository;
         this.authorityRepository = authorityRepository;
         this.cacheManager = cacheManager;
         this.keycloak = keycloak;
         this.userMapper = userMapper;
+        this.clientService = clientService;
+        this.providerService = providerService;
     }
 
     /**
@@ -247,6 +257,38 @@ public class UserService {
     }
     @Transactional
     public AdminUserDTO createUser(ManagedUserVM managedUserVM) {
+
+        String id = createUserInKeycloak(managedUserVM);
+        managedUserVM.setId(id);
+        AdminUserDTO savedUser = createUserEntity(managedUserVM, id);
+        if (savedUser.getAuthorities().contains(AuthoritiesConstants.CLIENT)) {
+            clientService.createClient(managedUserVM, id);
+        } else {
+            providerService.createProvider(managedUserVM, id);
+        }
+        return savedUser;
+    }
+
+
+
+    public AdminUserDTO save(AdminUserDTO adminUserDTO) {
+        log.debug("save user: {}", adminUserDTO);
+        User user = userRepository.save(userMapper.userDTOToUser(adminUserDTO));
+        return userMapper.userToAdminUserDTO(user);
+    }
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+     public AdminUserDTO createUserEntity(ManagedUserVM managedUserVM, String id){
+        managedUserVM.setId(id);
+        if (Objects.equals(UserRole.CLIENT, managedUserVM.getUserRole())){
+            managedUserVM.setAuthorities(Set.of(AuthoritiesConstants.CLIENT));
+        } else if (Objects.equals(UserRole.PROVIDER, managedUserVM.getUserRole())) {
+            managedUserVM.setAuthorities(Set.of(AuthoritiesConstants.PROVIDER));
+        }
+        return save(managedUserVM);
+     }
+
+
+    private String createUserInKeycloak(ManagedUserVM managedUserVM) {
         UserRepresentation user = new UserRepresentation();
         user.setUsername(managedUserVM.getLogin());
         user.setFirstName(managedUserVM.getFirstName());
@@ -254,13 +296,17 @@ public class UserService {
         user.setEmail(managedUserVM.getEmail());
         user.setEmailVerified(Boolean.FALSE);
         user.setEnabled(true);
-        user.setGroups(List.of("/user"));
+        if (Objects.equals(UserRole.CLIENT, managedUserVM.getUserRole())){
+            user.setGroups(List.of("/client"));
+        } else if (Objects.equals(UserRole.PROVIDER, managedUserVM.getUserRole())) {
+            user.setGroups(List.of("/provider"));
+        }
         CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
         credentialRepresentation.setType(CredentialRepresentation.PASSWORD);
         credentialRepresentation.setTemporary(Boolean.FALSE);
         credentialRepresentation.setValue(managedUserVM.getPassword());
         user.setCredentials(List.of(credentialRepresentation));
-        Response response = keycloak.realm("jhipster").users().create(user);
+        Response response = keycloak.realm(Constants.REALM_USERS).users().create(user);
         if (response.getStatus() != 201) {
             throw new BadRequestAlertException(
                 "Failed to create user: "+ response.getStatusInfo().getReasonPhrase(),
@@ -269,20 +315,7 @@ public class UserService {
         }
         URI location = response.getLocation();
         String id = location.toString().split("/")[location.toString().split("/").length-1];
-        managedUserVM.setId(id);
-        if (Objects.equals(UserRole.CLIENT, managedUserVM.getUserRole())){
-            managedUserVM.setAuthorities(Set.of(AuthoritiesConstants.CLIENT));
-        } else if (Objects.equals(UserRole.PROVIDER, managedUserVM.getUserRole())) {
-            managedUserVM.setAuthorities(Set.of(AuthoritiesConstants.PROVIDER));
-        }
-
-        return save(managedUserVM);
-    }
-
-    public AdminUserDTO save(AdminUserDTO adminUserDTO) {
-        log.debug("save user: {}", adminUserDTO);
-        User user = userRepository.save(userMapper.userDTOToUser(adminUserDTO));
-        return userMapper.userToAdminUserDTO(user);
+    return id;
     }
 
     private void clearUserCaches(User user) {

@@ -1,4 +1,5 @@
-package com.mycompany.myapp.config;
+package com.sundev.mission4us.config;
+
 
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
@@ -33,6 +34,7 @@ public class KeycloakConfig {
             .serverUrl(serverUrl)
             .realm(realm)
             .clientId(clientId)
+            .clientSecret(clientSecret)
             .username(username)
             .password(password)
             .build();

@@ -2,14 +2,19 @@ package com.sundev.mission4us.web.rest;
 
 import com.sundev.mission4us.service.UserService;
 import com.sundev.mission4us.service.dto.AdminUserDTO;
+
+import java.net.URI;
 import java.security.Principal;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
+import com.sundev.mission4us.web.rest.vm.ManagedUserVM;
+import org.keycloak.admin.client.Keycloak;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * REST controller for managing the current user's account.
@@ -17,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 public class AccountResource {
+    private final Keycloak keycloak;
 
     private static class AccountResourceException extends RuntimeException {
 
@@ -31,8 +37,9 @@ public class AccountResource {
 
     private final UserService userService;
 
-    public AccountResource(UserService userService) {
+    public AccountResource(UserService userService, Keycloak keycloak) {
         this.userService = userService;
+        this.keycloak = keycloak;
     }
 
     /**
@@ -64,4 +71,20 @@ public class AccountResource {
         return request.getRemoteUser();
     }
 
+    /**
+     * creating user in keycloak server and in postgres database
+     * @param managedUserVM
+     * @return
+     */
+    @PostMapping("/register")
+    public ResponseEntity<AdminUserDTO> createUser(@Valid @RequestBody ManagedUserVM managedUserVM) {
+        log.debug("Rest request to create user: {}", managedUserVM);
+        AdminUserDTO adminUserDTO = userService.createUser(managedUserVM);
+        return ResponseEntity.created(URI.create("/users/"+adminUserDTO.getId())).build();
+    }
+
+    @GetMapping("/count")
+    public Integer getUsersTest() {
+        return keycloak.realm("local_tests").users().count();
+    }
 }

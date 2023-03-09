@@ -35,7 +35,8 @@ public class ClientDTO implements Serializable {
 
     private Long updatedBy;
 
-    private UserDTO user;
+   // private UserDTO user;
+    private String userId;
 
     public Long getId() {
         return id;
@@ -109,6 +110,14 @@ public class ClientDTO implements Serializable {
         this.email = email;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public ZonedDateTime getCreated() {
         return created;
     }
@@ -139,14 +148,6 @@ public class ClientDTO implements Serializable {
 
     public void setUpdatedBy(Long updatedBy) {
         this.updatedBy = updatedBy;
-    }
-
-    public UserDTO getUser() {
-        return user;
-    }
-
-    public void setUser(UserDTO user) {
-        this.user = user;
     }
 
     @Override
@@ -187,7 +188,7 @@ public class ClientDTO implements Serializable {
             ", createdBy=" + getCreatedBy() +
             ", updated='" + getUpdated() + "'" +
             ", updatedBy=" + getUpdatedBy() +
-            ", user=" + getUser() +
+            ", user=" + getUserId() +
             "}";
     }
 }
